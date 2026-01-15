@@ -63,7 +63,7 @@ CMD ["bash"]
 EOF
 ```
 
-### rewuirements-dev.txt
+### Create requirements-dev.txt
 
 > Edit this to add python libraries you need.
 
