@@ -14,6 +14,16 @@
 > Use the copy button in git, then just paste the code into bash.
 > `cat << 'EOF' > filename ... EOF` is called heredoc, and writes a file if pasted into bash terminal.
 
+### If not already created, create iotnet docker network.
+
+```bash
+docker network create \
+  --driver bridge \
+  --subnet 192.168.2.0/24 \
+  --gateway 192.168.2.1 \
+  iotnet
+```
+
 ### Create project directory
 
 ```bash
@@ -63,6 +73,29 @@ black
 ruff
 pytest
 ipython
+EOF
+```
+
+``` docker-compose.yml
+
+> Docker compose is a more advanced way to create containers
+
+```bash
+cat <<'EOF' > docker-compose.yml
+services:
+  pyvim:
+    build: .
+    volumes:
+      - ./:/work
+    working_dir: /work
+    tty: true
+    stdin_open: true
+    networks:
+      - iotnet
+
+networks:
+  iotnet:
+    external: true
 EOF
 ```
 
@@ -120,10 +153,16 @@ if __name__ == "__main__":
 EOF
 ```
 
-### Redigera Script
+### Edit Script
 
 ```bash
 vim src/main.py
+```
+
+### Run Script
+
+```bash
+python src/main.py
 ```
 
 
