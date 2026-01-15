@@ -1,12 +1,28 @@
 # edu-python-in-docker
 
+> Tutorial creates a python machine in docker for exploratory coding.
+> The machine can be restarted with `docker compose run --rm pyvim`
+> To exit the machine, use Ctrl-d
+> The -rm removes the image after EOF (Ctrl-d)
+> If you want to keep it, remove the -rm argument, then login with:
+> 1. `docker start pyvim`
+> 2. `docker exec -it pyvim bash`
+
+
 ## Instructions 
+
+> Use the copy button in git, then just paste the code into bash.
+> `cat << 'EOF' > filename ... EOF` is called heredoc, and writes a file if pasted into bash terminal.
+
+### Create project directory
 
 ```bash
 mkdir pyvim && cd pyvim
 ```
 
 ### Create Docker file
+
+> Dockerfile is used to create the image
 
 ```bash
 cat <<'EOF' > Dockerfile
@@ -39,6 +55,8 @@ EOF
 
 ### rewuirements-dev.txt
 
+> Edit this to add python libraries you need.
+
 ```bash
 cat <<'EOF' > requirements-dev.txt
 black
@@ -48,7 +66,7 @@ ipython
 EOF
 ```
 
-### .vimrc
+### Configure VIM for Python use.
 
 ```bash
 cat <<'EOF' > .vimrc
@@ -87,6 +105,30 @@ __pycache__/
 *.pyc
 EOF
 ```
+
+## Sample Source
+
+```bash
+mkdir -p src
+
+cat <<'EOF' > src/main.py
+def add(a, b):
+    return a + b
+
+if __name__ == "__main__":
+    print(add(2, 3))
+EOF
+```
+
+### Redigera Script
+
+```bash
+vim src/main.py
+```
+
+
+
+
 
 
 
