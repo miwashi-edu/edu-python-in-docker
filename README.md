@@ -76,7 +76,7 @@ ipython
 EOF
 ```
 
-``` docker-compose.yml
+### docker-compose.yml
 
 > Docker compose is a more advanced way to create containers
 
