@@ -1,0 +1,14 @@
+services:
+  pyvim:
+    build: .
+    volumes:
+      - ./:/work
+    working_dir: /work
+    tty: true
+    stdin_open: true
+    networks:
+      - iotnet
+
+networks:
+  iotnet:
+    external: true
