@@ -153,6 +153,15 @@ if __name__ == "__main__":
 EOF
 ```
 
+## Build and Start the Container
+
+```bash
+docker compose build
+docker compose run --rm pyvim # This will log you in to bash in the container
+```
+
+## In container
+
 ### Edit Script
 
 ```bash
@@ -164,6 +173,14 @@ vim src/main.py
 ```bash
 python src/main.py
 ```
+
+
+### Exit container
+
+```bash
+Ctrl-D
+```
+
 
 
 
