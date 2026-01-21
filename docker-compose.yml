@@ -1,36 +1,22 @@
-version: "3.9"
-
 services:
   server:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        USER: dev
-        UID: 1000
-        GID: 1000
+    build: .
     container_name: iot-server
-    working_dir: /work
     volumes:
       - .:/work
-    command: ["bash"]
+    ports:
+      - "2222:22"
     networks:
       iotnet:
         ipv4_address: 192.168.2.10
 
   client:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        USER: dev
-        UID: 1000
-        GID: 1000
+    build: .
     container_name: iot-client
-    working_dir: /work
     volumes:
       - .:/work
-    command: ["bash"]
+    ports:
+      - "2223:22"
     depends_on:
       - server
     networks:
