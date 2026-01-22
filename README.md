@@ -1,7 +1,14 @@
 # edu-python-in-docker
 
 
+## Instructions
+
+### Prepare
 ```
+cd ~
+cd ws
+git clone https://github.com/miwashi-edu/edu-python-in-docker.git
+cd edu-python-in-docker
 docker compose up -d
 docker ps
 ```
