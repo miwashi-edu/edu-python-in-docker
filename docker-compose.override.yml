@@ -1,0 +1,4 @@
+networks:
+  iotnet:
+    external: true
+    name: iotnet

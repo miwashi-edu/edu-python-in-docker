@@ -2,7 +2,7 @@ FROM python:3.12-slim
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     vim git curl ca-certificates build-essential \
-    openssh-server \
+    openssh-server sudo \
  && rm -rf /var/lib/apt/lists/*
 
 ARG USER=dev
@@ -16,6 +16,10 @@ RUN groupadd -g ${GID} ${USER} \
 
 # dev:dev
 RUN echo "${USER}:${USER}" | chpasswd
+
+# allow dev to sudo (no password)
+RUN echo "${USER} ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/${USER} \
+ && chmod 0440 /etc/sudoers.d/${USER}
 
 # ssh config
 RUN sed -i 's/^#\?PasswordAuthentication .*/PasswordAuthentication yes/' /etc/ssh/sshd_config \
