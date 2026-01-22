@@ -57,6 +57,8 @@ docker compose up -d
 ssh-keygen -R "[localhost]:2222" # Add new key if needed 
 ssh-keygen -R "[localhost]:2223" # Add new key if needed
 cat ~/.ssh/known_hosts # Optional, this is where the keys are stored (can be edited in vim also)
+cat ~/.ssh/known_hosts | grep 2222 # Filter output
+cat ~/.ssh/known_hosts | grep 2223 # Filter output
 ```
 
 
