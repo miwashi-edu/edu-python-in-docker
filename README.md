@@ -32,7 +32,7 @@ ssh -p 2222 dev@localhost   # password dev, respond yes if prompted about signat
 ssh -p 2223 dev@localhost   # password dev, respond yes if prompted about signature
 ```
 
-## Rebuilding machines
+### Rebuilding machines
 
 ```bash
 docker compose up -d --build
@@ -46,7 +46,7 @@ docker compose up -d
 ```
 
 
-## Generate new signatures if needed
+### Generate new signatures if needed
 
 > When you see  
 > @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  
@@ -56,9 +56,8 @@ docker compose up -d
 ```bash
 ssh-keygen -R "[localhost]:2222" # Add new key if needed 
 ssh-keygen -R "[localhost]:2223" # Add new key if needed
+cat ~/.ssh/known_hosts # Optional, this is where the keys are stored (can be edited in vim also)
 ```
-
-
 
 
 
