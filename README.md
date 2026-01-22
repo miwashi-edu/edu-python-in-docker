@@ -13,6 +13,13 @@ docker compose up -d
 docker ps
 ```
 
+### Check IP adreesses
+
+```bash
+docker inspect iotnet # read the json produced
+```
+
+
 ### Login to Server
 
 ```bash
