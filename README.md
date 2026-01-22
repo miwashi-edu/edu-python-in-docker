@@ -23,13 +23,13 @@ docker inspect iotnet # read the json produced
 ### Login to Server
 
 ```bash
-ssh -p 2222 dev@localhost   # server (iot-server), password dev, respond yes if prompted
+ssh -p 2222 dev@localhost   # password dev, respond yes if prompted about signature
 ```
 
 ### Login to client
 
 ```bash
-ssh -p 2223 dev@localhost   # client (iot-client), password dev, respond yes if prompted
+ssh -p 2223 dev@localhost   # password dev, respond yes if prompted about signature
 ```
 
 ## Rebuilding machines
