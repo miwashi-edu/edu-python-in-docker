@@ -9,7 +9,7 @@ cd ~
 cd ws
 git clone https://github.com/miwashi-edu/edu-python-in-docker.git
 cd edu-python-in-docker
-git checkout level-1
+git checkout level-2
 docker compose up -d
 docker ps
 ```
@@ -20,24 +20,28 @@ docker ps
 docker inspect iotnet # read the json produced
 ```
 
-
-### Login to Server
-
-```bash
-ssh -p 2222 dev@localhost   # password dev, respond yes if prompted about signature
-cd ~/src
-python tcp-server.py
-# or
-python udp-server.py
-```
-
 ### Login to client
 
+#### Client 1
+
 ```bash
-ssh -p 2223 dev@localhost   # password dev, respond yes if prompted about signature
-python tcp-client.py
-# or
-python udp-client.py
+ssh -p 2223 dev@localhost   # password dev
+cd ~/src
+python mqtt-listener.py
+```
+
+```bash
+ssh -p 2224 dev@localhost   # password dev
+cd ~/src
+python mqtt-listener.py
+```
+
+### Login to Broadcaster
+
+```bash
+ssh -p 2223 dev@localhost   # password dev
+cd ~/src
+python mqtt-broadcaster.py
 ```
 
 ### Rebuilding machines
