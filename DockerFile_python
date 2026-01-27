@@ -28,6 +28,11 @@ RUN sed -i 's/^#\?PasswordAuthentication .*/PasswordAuthentication yes/' /etc/ss
 
 WORKDIR /work
 
+# ensure src exists and create symlinks
+RUN mkdir -p /work/src \
+ && ln -s /work/src /src \
+ && ln -s /work/src /home/${USER}/src
+
 COPY requirements-dev.txt /tmp/requirements-dev.txt
 RUN pip install --no-cache-dir -U pip \
  && pip install --no-cache-dir -r /tmp/requirements-dev.txt
