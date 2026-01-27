@@ -27,20 +27,23 @@ docker inspect iotnet # read the json produced
 ```bash
 ssh -p 2223 dev@localhost   # password dev
 cd ~/src
+pip install paho-mqtt
 python mqtt-listener.py
 ```
 
 ```bash
 ssh -p 2224 dev@localhost   # password dev
 cd ~/src
+pip install paho-mqtt
 python mqtt-listener.py
 ```
 
 ### Login to Broadcaster
 
 ```bash
-ssh -p 2223 dev@localhost   # password dev
+ssh -p 2222 dev@localhost   # password dev
 cd ~/src
+pip install paho-mqtt
 python mqtt-broadcaster.py
 ```
 
