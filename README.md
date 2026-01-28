@@ -13,39 +13,53 @@ docker compose up -d
 docker ps
 ```
 
-### Terminal one
+### Check IP adreesses
 
-```
-ssh -p 2222 dev@localhost
-cd src
-pip install aiocoap paho-mqtt
-echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
-source ~/.bashrc
-python chatter.py
+```bash
+docker inspect iotnet # read the json produced
 ```
 
-### Terminal two
 
-```
-ssh -p 2223 dev@localhost
-cd src
-pip install aiocoap paho-mqtt
-echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
-source ~/.bashrc
-python chatter.py
+### Login to Server
+
+```bash
+ssh -p 2222 dev@localhost   # password dev, respond yes if prompted about signature
 ```
 
-### Terminal three
+### Login to client
 
-```
-ssh -p 2224 dev@localhost
-cd src
-pip install aiocoap paho-mqtt
-echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
-source ~/.bashrc
-python chatter.py
+```bash
+ssh -p 2223 dev@localhost   # password dev, respond yes if prompted about signature
 ```
 
+### Rebuilding machines
+
+```bash
+docker compose up -d --build
+```
+
+or
+
+```bash
+docker compose build --no-cache
+docker compose up -d
+```
+
+
+### Generate new signatures if needed
+
+> When you see  
+> @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  
+> @    WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!     @  
+> @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  
+
+```bash
+ssh-keygen -R "[localhost]:2222" # Add new key if needed 
+ssh-keygen -R "[localhost]:2223" # Add new key if needed
+cat ~/.ssh/known_hosts # Optional, this is where the keys are stored (can be edited in vim also)
+cat ~/.ssh/known_hosts | grep 2222 # Filter output
+cat ~/.ssh/known_hosts | grep 2223 # Filter output
+```
 
 
 
