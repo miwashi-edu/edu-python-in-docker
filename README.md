@@ -95,6 +95,73 @@ pip install -e .
 chatter --mqtt-host mqtt --interval 5
 ```
 
+#### Suggested \_\_main\_\_.py
+
+```python
+# chatter/__main__.py
+
+import asyncio
+import socket
+
+from .cli import parse_args
+from .net import get_my_ip
+from .mqtt_presence import start_mqtt
+from .coap_node import start_coap_server
+from .loop import chatter_loop
+
+
+def main():
+    args = parse_args()
+
+    my_ip = get_my_ip()
+    hostname = socket.gethostname()
+    print(f"[SYS] hostname={hostname} ip={my_ip}")
+
+    known_ips = set()
+    known_lock = asyncio.Lock()
+
+    async def runner():
+        # CoAP server
+        await start_coap_server(
+            bind_host=args.coap_bind_host,
+            bind_port=args.coap_port,
+        )
+        print(f"[COAP] listening on {args.coap_bind_host}:{args.coap_port}")
+
+        # MQTT discovery
+        loop = asyncio.get_running_loop()
+        mqtt_client = start_mqtt(
+            loop=loop,
+            args=args,
+            my_ip=my_ip,
+            known_ips=known_ips,
+            known_lock=known_lock,
+        )
+
+        # Periodic chatter
+        chatter_task = asyncio.create_task(
+            chatter_loop(
+                my_ip=my_ip,
+                known_ips=known_ips,
+                known_lock=known_lock,
+                interval=args.interval,
+                coap_port=args.coap_port,
+            )
+        )
+
+        try:
+            await chatter_task
+        finally:
+            mqtt_client.loop_stop()
+            mqtt_client.disconnect()
+
+    asyncio.run(runner())
+
+
+if __name__ == "__main__":
+    main()
+```
+
 
 
 
