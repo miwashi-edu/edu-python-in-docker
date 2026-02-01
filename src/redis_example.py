@@ -1,4 +1,5 @@
-# redis_kv_cli.py
+#!/usr/bin/env python3
+
 import redis
 
 r = redis.Redis(host="redis", port=6379, decode_responses=True)
