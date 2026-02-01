@@ -1,3 +1,5 @@
+version: "3.9"
+
 services:
   mqtt-broker:
     image: eclipse-mosquitto:2
@@ -25,6 +27,7 @@ services:
     networks:
       iotnet:
         ipv4_address: 192.168.2.10
+    restart: unless-stopped
 
   client:
     build:
@@ -42,6 +45,7 @@ services:
     networks:
       iotnet:
         ipv4_address: 192.168.2.11
+    restart: unless-stopped
 
   client2:
     build:
@@ -59,6 +63,104 @@ services:
     networks:
       iotnet:
         ipv4_address: 192.168.2.12
+    restart: unless-stopped
+
+  # Key-value
+  redis:
+    image: redis:7
+    container_name: redis
+    hostname: redis
+    ports:
+      - "6379:6379"
+    networks:
+      iotnet:
+        ipv4_address: 192.168.2.20
+    restart: unless-stopped
+
+  # Relational
+  postgres:
+    image: postgres:16
+    container_name: postgres
+    hostname: postgres
+    environment:
+      POSTGRES_USER: iot
+      POSTGRES_PASSWORD: iotpass
+      POSTGRES_DB: iotdb
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      iotnet:
+        ipv4_address: 192.168.2.21
+    restart: unless-stopped
+
+  # Graph
+  neo4j:
+    image: neo4j:5
+    container_name: neo4j
+    hostname: neo4j
+    environment:
+      NEO4J_AUTH: neo4j/neo4jpass
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    volumes:
+      - neo4jdata:/data
+    networks:
+      iotnet:
+        ipv4_address: 192.168.2.22
+    restart: unless-stopped
+
+  # Document
+  mongodb:
+    image: mongo:7
+    container_name: mongodb
+    hostname: mongodb
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: rootpass
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodata:/data/db
+    networks:
+      iotnet:
+        ipv4_address: 192.168.2.23
+    restart: unless-stopped
+
+  # Columnar analytics
+  clickhouse:
+    image: clickhouse/clickhouse-server:24
+    container_name: clickhouse
+    hostname: clickhouse
+    ports:
+      - "8123:8123"
+      - "9000:9000"
+    volumes:
+      - chdata:/var/lib/clickhouse
+    ulimits:
+      nofile:
+        soft: 262144
+        hard: 262144
+    networks:
+      iotnet:
+        ipv4_address: 192.168.2.24
+    restart: unless-stopped
+
+  # Time-series
+  influxdb:
+    image: influxdb:2
+    container_name: influxdb
+    hostname: influxdb
+    ports:
+      - "8086:8086"
+    volumes:
+      - influxdata:/var/lib/influxdb2
+    networks:
+      iotnet:
+        ipv4_address: 192.168.2.25
+    restart: unless-stopped
 
 networks:
   iotnet:
@@ -68,3 +170,10 @@ networks:
       config:
         - subnet: 192.168.2.0/24
           gateway: 192.168.2.1
+
+volumes:
+  pgdata:
+  neo4jdata:
+  mongodata:
+  chdata:
+  influxdata:
