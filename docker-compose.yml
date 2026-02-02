@@ -155,12 +155,20 @@ services:
     hostname: influxdb
     ports:
       - "8086:8086"
+    environment:
+      DOCKER_INFLUXDB_INIT_MODE: setup
+      DOCKER_INFLUXDB_INIT_USERNAME: admin
+      DOCKER_INFLUXDB_INIT_PASSWORD: adminpass
+      DOCKER_INFLUXDB_INIT_ORG: iotorg
+      DOCKER_INFLUXDB_INIT_BUCKET: temps
+      DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: iot-token-123
     volumes:
       - influxdata:/var/lib/influxdb2
     networks:
       iotnet:
         ipv4_address: 192.168.2.25
     restart: unless-stopped
+
 
 networks:
   iotnet:

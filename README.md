@@ -4,167 +4,108 @@
 ## Instructions
 
 ### Prepare
-```
+
+```bash
 cd ~
 cd ws
 git clone https://github.com/miwashi-edu/edu-python-in-docker.git
 cd edu-python-in-docker
+docker compose down # If up from before.
 docker compose up -d
 docker ps
 ```
+### Redis
 
-### Terminal one
+> Redis is an in-memory key-value database optimized for extremely fast 
+> reads/writes, often used for caching, queues, and ephemeral state.
 
-```
+```bash
 ssh -p 2222 dev@localhost
 cd src
-pip install aiocoap paho-mqtt
-echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
-source ~/.bashrc
-python chatter.py
+pip install redis
+python redis_example.py
 ```
 
-### Terminal two
+### PostgreSQL
 
-```
-ssh -p 2223 dev@localhost
-cd src
-pip install aiocoap paho-mqtt
-echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
-source ~/.bashrc
-python chatter.py
-```
+> **PostgreSQL** is a **relational (row-based) database** focused on **transactions, 
+> consistency, and complex queries** using SQL.
 
-### Terminal three
-
-```
-ssh -p 2224 dev@localhost
-cd src
-pip install aiocoap paho-mqtt
-echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
-source ~/.bashrc
-python chatter.py
-```
-
-### Refactor for understanding
-
-#### Target file structure
-
-```
-chatter/
-  __init__.py
-  __main__.py
-  cli.py
-  net.py
-  mqtt_presence.py
-  coap_node.py
-  loop.py
-```
-
-#### Suggested SoC
-
-1. __main__.py – entrypoint (python -m chatter)
-2. cli.py – argparse config (all flags)
-3. net.py – get_my_ip() + small helpers
-4. mqtt_presence.py – connect/subscribe/publish presence + update registry
-5. coap_node.py – CoAP server resource + client context creation
-6. loop.py – periodic “see you” loop + shared registry/lock
-
-#### Suggested run command
 
 ```bash
-python -m chatter --mqtt-host mqtt --topic iot/presence --interval 5
+ssh -p 2222 dev@localhost
+cd src
+pip install psycopg[binary]
+python postgres_example.py
 ```
 
-#### Suggested poetry toml
+### Graph Database
 
-```toml
-[project]
-name = "chatter"
-version = "0.1.0"
-dependencies = ["aiocoap", "paho-mqtt"]
+> A graph database stores data as nodes and relationships, 
+> optimized for traversing connections rather than scanning tables.
 
-[project.scripts]
-chatter = "chatter.__main__:main"
+#### Example (graph search, Neo4j / Cypher):
+```neo4j
+MATCH (a:User)-[:KNOWS]->(b:User)-[:KNOWS]->(c:User)
+WHERE a.name = "Mikael"
+RETURN c.name;
 ```
-
-#### Installation with pip and toml
+→ “Find friends-of-friends of Mikael.”
 
 ```bash
-pip install -e .
-chatter --mqtt-host mqtt --interval 5
+ssh -p 2222 dev@localhost
+cd src
+pip install neo4j
+python neo4j_example.py
 ```
 
-#### Suggested \_\_main\_\_.py
+### Document Database
 
-```python
-# chatter/__main__.py
+> MongoDB is a document-oriented database that stores schema-flexible 
+> JSON-like documents, optimized for easy data modeling and horizontal scaling.
 
-import asyncio
-import socket
-
-from .cli import parse_args
-from .net import get_my_ip
-from .mqtt_presence import start_mqtt
-from .coap_node import start_coap_server
-from .loop import chatter_loop
-
-
-def main():
-    args = parse_args()
-
-    my_ip = get_my_ip()
-    hostname = socket.gethostname()
-    print(f"[SYS] hostname={hostname} ip={my_ip}")
-
-    known_ips = set()
-    known_lock = asyncio.Lock()
-
-    async def runner():
-        # CoAP server
-        await start_coap_server(
-            bind_host=args.coap_bind_host,
-            bind_port=args.coap_port,
-        )
-        print(f"[COAP] listening on {args.coap_bind_host}:{args.coap_port}")
-
-        # MQTT discovery
-        loop = asyncio.get_running_loop()
-        mqtt_client = start_mqtt(
-            loop=loop,
-            args=args,
-            my_ip=my_ip,
-            known_ips=known_ips,
-            known_lock=known_lock,
-        )
-
-        # Periodic chatter
-        chatter_task = asyncio.create_task(
-            chatter_loop(
-                my_ip=my_ip,
-                known_ips=known_ips,
-                known_lock=known_lock,
-                interval=args.interval,
-                coap_port=args.coap_port,
-            )
-        )
-
-        try:
-            await chatter_task
-        finally:
-            mqtt_client.loop_stop()
-            mqtt_client.disconnect()
-
-    asyncio.run(runner())
-
-
-if __name__ == "__main__":
-    main()
+```bash
+ssh -p 2222 dev@localhost
+cd src
+pip install pymongo
+python mongodb_example.py
 ```
 
+### Column Database
+
+> ClickHouse is a columnar analytics database optimized for fast 
+> aggregations and scans over massive datasets, not transactional CRUD.
+
+```bash
+ssh -p 2222 dev@localhost
+cd src
+pip install clickhouse-connect
+python clickhouse_example.py
+```
+
+### Time Series Database
+
+> **InfluxDB** is a **time-series database** where **users and tokens are 
+> created via the web UI (`http://localhost:8086`)**, and **time-series data can be 
+> explored and visualized there** (queries, charts, dashboards).
+> Script cant be used before visiting: `http://localhost:8086`
 
 
+```bash
+ssh -p 2222 dev@localhost
+cd src
+pip install influxdb-client
+python influxdb_example.py
+```
+Surf to http://localhost:8086 and add a user
 
+### Use shebang
+
+```bash
+# Works if you have a shebang (#!/usr/bin/env python3)
+chmod + x redis_example.py
+./redis_example.py # As working directory isn't in path we need to tell here with ./
+```
 
 
 
