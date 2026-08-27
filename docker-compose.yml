@@ -31,7 +31,7 @@ services:
 
 networks:
   testnet:
-    name: iotnet
+    name: testnet
     driver: bridge
     ipam:
       config:
