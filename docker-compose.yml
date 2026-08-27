@@ -10,7 +10,7 @@ services:
     ports:
       - "2222:22"
     networks:
-      iotnet:
+      testnet:
         ipv4_address: 192.168.2.10
 
   client:
@@ -26,11 +26,11 @@ services:
     depends_on:
       - server
     networks:
-      iotnet:
+      testnet:
         ipv4_address: 192.168.2.11
 
 networks:
-  iotnet:
+  testnet:
     name: iotnet
     driver: bridge
     ipam:
