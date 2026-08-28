@@ -16,7 +16,7 @@ docker ps
 ### Check IP adreesses
 
 ```bash
-docker inspect iotnet # read the json produced
+docker inspect testnet # read the json produced
 ```
 
 
